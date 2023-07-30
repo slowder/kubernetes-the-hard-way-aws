@@ -27,6 +27,7 @@ for instance in worker-0 worker-1 worker-2; do
     --output text --query 'UserData.Value' \
     | base64 --decode | tr "|" "\n" | grep "^pod-cidr" | cut -d'=' -f2)"
   echo "${instance_ip} ${pod_cidr}"
+  ROUTE_TABLE_ID=$(echo "kubernetes-route-${pod_cidr}" | sed "s/[./]/-/g")
 
   aws ec2 create-route \
     --route-table-id "${ROUTE_TABLE_ID}" \
